@@ -1,4 +1,5 @@
-#include <swab.h>
+#include <stdint.h>
+#include <linux/swab.h>
 
 #ifndef __section
 #define __section(NAME) 	\
@@ -43,7 +44,6 @@
     })
 #endif
 
-
 /* ebpf helper function
  * The generated function is used for parameter verification
  * by the eBPF verifier
@@ -71,16 +71,12 @@ struct sock_key {
 	uint32_t sip4;
 	uint32_t dip4;
 	uint8_t  family;
-	uint8_t  pad1;
-	uint16_t pad2;
-	// this padding required for 64bit alignment
-	// else ebpf kernel verifier rejects loading
-	// of the program
+	uint8_t  pad1;   // this padding required for 64bit alignment
+	uint16_t pad2;   // else ebpf kernel verifier rejects loading of the program
 	uint32_t pad3;
 	uint32_t sport;
 	uint32_t dport;
 } __attribute__((packed));
-
 
 struct bpf_map_def __section("maps") sock_ops_map = {
 	.type           = BPF_MAP_TYPE_SOCKHASH,
